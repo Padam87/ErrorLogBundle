@@ -1,0 +1,21 @@
+{
+    "name": "padam87/error-log-bundle",
+    "description": "A bundle to log 500 errors in the database",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adam Prager",
+            "email": "prager.adam87@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "doctrine/doctrine-bundle": "^2.1",
+        "doctrine/orm": "^2.6",
+        "symfony/config": "^4.0 || ^5.0",
+        "symfony/dependency-injection": "^4.0 || ^5.0",
+        "symfony/monolog-bundle": "^3.0",
+        "symfony/security-bundle": "^4.0 || ^5.0"
+    }
+}

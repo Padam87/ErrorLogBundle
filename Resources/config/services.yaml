@@ -1,0 +1,12 @@
+services:
+    Padam87\ErrorLogBundle\Handler\LogHandler:
+        calls:
+            - ['setDoctrine', ['@doctrine']]
+            - ['setTokenStorage', ['@security.token_storage']]
+            - ['setRequestStack', ['@request_stack']]
+            - ['setRootDir', ['%kernel.project_dir%']]
+            - ['setConfig', ['%padam87_monolog_extra.config%']]
+
+    extra_log_handler:
+        alias: Padam87\ErrorLogBundle\Handler\LogHandler
+

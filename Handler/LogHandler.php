@@ -5,6 +5,7 @@ namespace Padam87\ErrorLogBundle\Handler;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Exception;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Request;
 use Padam87\ErrorLogBundle\Entity\Error;
@@ -50,7 +51,7 @@ class LogHandler extends AbstractProcessingHandler
         $this->config = $config;
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         try {
             $this->_write($record);
@@ -59,7 +60,7 @@ class LogHandler extends AbstractProcessingHandler
         }
     }
 
-    private function _write(array $record)
+    private function _write(LogRecord $record)
     {
         if ($record['level'] < Logger::ERROR) {
             return;
@@ -102,15 +103,11 @@ class LogHandler extends AbstractProcessingHandler
         return false;
     }
 
-    private function writeException(array $record, \Throwable $exception): Error
+    private function writeException(LogRecord $record, \Throwable $exception): Error
     {
         $e = Exception::fromException($exception, $this->rootDir);
 
-        if (\is_callable([$this->requestStack, 'getMainRequest'])) {
-            $request = $this->requestStack->getMainRequest();   // symfony 5.3+
-        } else {
-            $request = $this->requestStack->getMasterRequest();
-        }
+        $request = $this->requestStack->getMainRequest();
 
         if (null !== $request) {
             $r = Request::fromRequest($request);

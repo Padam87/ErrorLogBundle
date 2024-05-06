@@ -7,71 +7,51 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Exception;
 
-/**
- * @ORM\Entity()
- */
+#[ORM\Entity]
 class Error
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue()
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
     private ?int $id = null;
 
     /**
      * A unique hash based on "method", "route", "message", "file" and "line".
      * Necessary to avoid "1071 Specified key was too long" errors.
      * Should not be used for anything else.
-     *
-     * @ORM\Column(unique=true)
      */
+    #[ORM\Column(unique: true)]
     private ?string $uniqueHash = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $level = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $method = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $route = null;
 
-    /**
-     * @ORM\Embedded(class="Padam87\ErrorLogBundle\Entity\Emeddables\Exception")
-     */
+    #[ORM\Embedded(class: Exception::class)]
     private ?Exception $exception = null;
 
     /**
      * @var Occurrence[]|Collection
-     *
-     * @ORM\OneToMany(targetEntity="Padam87\ErrorLogBundle\Entity\Occurrence", mappedBy="error", cascade={"remove"}, orphanRemoval=true)
-     * @ORM\OrderBy({"loggedAt" = "DESC"})
      */
+    #[ORM\OneToMany(targetEntity: Occurrence::class, mappedBy: 'error', cascade: ['remove'], orphanRemoval: true)]
+    #[ORM\OrderBy(['loggedAt' => 'DESC'])]
     private ?Collection $occurrences = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Padam87\ErrorLogBundle\Entity\Occurrence", cascade={"remove"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\OneToOne(targetEntity: Occurrence::class, cascade: ['remove'])]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Occurrence $fistOccurrence = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Padam87\ErrorLogBundle\Entity\Occurrence", cascade={"remove"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\OneToOne(targetEntity: Occurrence::class, cascade: ['remove'])]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Occurrence $lastOccurrence = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="Padam87\ErrorLogBundle\Entity\Error", cascade={"remove"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\OneToOne(targetEntity: \Padam87\ErrorLogBundle\Entity\Error::class, cascade: ['remove'])]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Error $previous = null;
 
     public function __construct()

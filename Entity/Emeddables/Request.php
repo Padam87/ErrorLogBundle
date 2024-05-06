@@ -5,44 +5,28 @@ namespace Padam87\ErrorLogBundle\Entity\Emeddables;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Console\Input\InputInterface;
 
-/**
- * @ORM\Embeddable()
- */
-class Request
+#[ORM\Embeddable]
+class Request implements \Stringable
 {
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $url = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $method = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     */
+    #[ORM\Column(nullable: true)]
     private ?string $locale = null;
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $query = [];
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $request = [];
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $headers = [];
 
-    /**
-     * @ORM\Column(type="json", nullable=true)
-     */
+    #[ORM\Column(type: 'json', nullable: true)]
     private ?array $attributes = [];
 
     public static function fromRequest(?\Symfony\Component\HttpFoundation\Request $request): self

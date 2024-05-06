@@ -4,41 +4,29 @@ namespace Padam87\ErrorLogBundle\Entity\Emeddables;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Embeddable()
- */
+#[ORM\Embeddable]
 class Exception
 {
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $class = null;
 
-    /**
-     * @ORM\Column(type="text")
-     */
+    #[ORM\Column(type: 'text')]
     private ?string $message = null;
 
-    /**
-     * @ORM\Column()
-     */
+    #[ORM\Column]
     private ?string $file = null;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Column(type: 'integer')]
     private ?int $line = null;
 
-    /**
-     * @ORM\Column(type="json")
-     */
+    #[ORM\Column(type: 'json')]
     private ?array $trace = [];
 
     public static function fromException(\Throwable $exception, string $rootDir): self
     {
         $e = new self();
 
-        $e->class = get_class($exception);
+        $e->class = $exception::class;
         $e->message = $exception->getMessage();
         $e->file = str_replace($rootDir, '', $exception->getFile());
         $e->line = $exception->getLine();

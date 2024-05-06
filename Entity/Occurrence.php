@@ -6,44 +6,30 @@ use Doctrine\ORM\Mapping as ORM;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Exception;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Request;
 
-/**
- * @ORM\Entity()
- * @ORM\Table("error_occurrence")
- */
+#[ORM\Entity]
+#[ORM\Table('error_occurrence')]
 class Occurrence
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue()
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: 'integer')]
+    #[ORM\GeneratedValue]
     private ?int $id = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Padam87\ErrorLogBundle\Entity\Error", inversedBy="occurrences")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: Error::class, inversedBy: 'occurrences')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Error $error = null;
 
-    /**
-     * @ORM\Embedded(class="Padam87\ErrorLogBundle\Entity\Emeddables\Request")
-     */
+    #[ORM\Embedded(class: Request::class)]
     private ?Request $request = null;
 
-    /**
-     * @ORM\Embedded(class="Padam87\ErrorLogBundle\Entity\Emeddables\Exception")
-     */
+    #[ORM\Embedded(class: Exception::class)]
     private ?Exception $exception = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $loggedAt = null;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Padam87\ErrorLogBundle\Entity\UserInterface")
-     * @ORM\JoinColumn(onDelete="SET NULL")
-     */
+    #[ORM\ManyToOne(targetEntity: UserInterface::class)]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?UserInterface $user = null;
 
     public function __construct()

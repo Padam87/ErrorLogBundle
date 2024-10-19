@@ -5,6 +5,7 @@ namespace Padam87\ErrorLogBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Exception;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Request;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity]
 #[ORM\Table('error_occurrence')]
@@ -28,9 +29,8 @@ class Occurrence
     #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $loggedAt = null;
 
-    #[ORM\ManyToOne(targetEntity: UserInterface::class)]
-    #[ORM\JoinColumn(onDelete: 'SET NULL')]
-    private ?UserInterface $user = null;
+    #[ORM\Column(type: 'string', length: 1000, nullable: true)]
+    private mixed $userIdentifier = null;
 
     public function __construct()
     {
@@ -91,14 +91,21 @@ class Occurrence
         return $this;
     }
 
-    public function getUser(): ?UserInterface
+    public function getUserIdentifier(): mixed
     {
-        return $this->user;
+        return $this->userIdentifier;
+    }
+
+    public function setUserIdentifier(mixed $userIdentifier): self
+    {
+        $this->userIdentifier = $userIdentifier;
+
+        return $this;
     }
 
     public function setUser(?UserInterface $user): self
     {
-        $this->user = $user;
+        $this->userIdentifier = $user?->getUserIdentifier();
 
         return $this;
     }

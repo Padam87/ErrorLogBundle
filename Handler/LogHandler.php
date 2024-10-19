@@ -10,11 +10,11 @@ use Padam87\ErrorLogBundle\Entity\Emeddables\Exception;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Request;
 use Padam87\ErrorLogBundle\Entity\Error;
 use Padam87\ErrorLogBundle\Entity\Occurrence;
-use Padam87\ErrorLogBundle\Entity\UserInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class LogHandler extends AbstractProcessingHandler
 {
@@ -55,7 +55,7 @@ class LogHandler extends AbstractProcessingHandler
     {
         try {
             $this->_write($record);
-        } catch (\Exception) {
+        } catch (\Exception $e) {
             // getting and Exception here would cause a inf. loop
         }
     }
@@ -117,17 +117,14 @@ class LogHandler extends AbstractProcessingHandler
         $unique = $this->createUniqueHash($r, $e);
 
         $em = $this->registry->getManager();
-        $user = $this->getUser();
 
         if (!$em->isOpen()) {
             $em = $this->registry->resetManager();
-
-            if ($user !== null) {
-                $this->user = $user = $em->find(UserInterface::class, $user->getId());
-            }
         }
 
         $repo = $em->getRepository(Error::class);
+
+        $user = $this->getUser();
 
         if (null === $error = $repo->findOneBy(['uniqueHash' => $unique])) {
             $error = new Error();

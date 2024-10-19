@@ -5,7 +5,7 @@ services:
             - ['setTokenStorage', ['@security.token_storage']]
             - ['setRequestStack', ['@request_stack']]
             - ['setRootDir', ['%kernel.project_dir%']]
-            - ['setConfig', ['%padam87_monolog_extra.config%']]
+            - ['setConfig', ['%padam87_error_log.config%']]
 
     extra_log_handler:
         alias: Padam87\ErrorLogBundle\Handler\LogHandler

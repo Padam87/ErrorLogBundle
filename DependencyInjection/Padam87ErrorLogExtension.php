@@ -25,6 +25,6 @@ class Padam87ErrorLogExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
-        $container->setParameter('padam87_monolog_extra.config', $config);
+        $container->setParameter('padam87_error_log.config', $config);
     }
 }

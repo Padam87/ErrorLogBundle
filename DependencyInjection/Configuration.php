@@ -12,14 +12,18 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('padam87_monolog_extra');
+        $treeBuilder = new TreeBuilder('padam87_error_log');
 
         $treeBuilder->getRootNode()
             ->children()
                 ->arrayNode('ignored_exceptions')
                     ->arrayPrototype()
-                        ->scalarPrototype()
+                        ->scalarPrototype()->end()
                     ->end()
+                ->end()
+                ->scalarNode('entity_manager_name')
+                    ->defaultValue('default')
+                    ->info('The entity manager used to store the logs.')
                 ->end()
             ->end()
         ;

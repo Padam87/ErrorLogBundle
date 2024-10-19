@@ -80,7 +80,7 @@ class LogHandler extends AbstractProcessingHandler
         if ($exception instanceof \Throwable && !$this->isIgnored($exception)) {
             $this->writeException($record, $exception);
 
-            $this->registry->getManager()->flush();
+            $this->registry->getManager($this->config['entity_manager_name'])->flush();
         }
     }
 
@@ -116,10 +116,10 @@ class LogHandler extends AbstractProcessingHandler
 
         $unique = $this->createUniqueHash($r, $e);
 
-        $em = $this->registry->getManager();
+        $em = $this->registry->getManager($this->config['entity_manager_name']);
 
         if (!$em->isOpen()) {
-            $em = $this->registry->resetManager();
+            $em = $this->registry->resetManager($this->config['entity_manager_name']);
         }
 
         $repo = $em->getRepository(Error::class);

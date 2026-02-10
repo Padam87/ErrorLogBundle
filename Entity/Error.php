@@ -50,7 +50,7 @@ class Error
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Occurrence $lastOccurrence = null;
 
-    #[ORM\OneToOne(targetEntity: \Padam87\ErrorLogBundle\Entity\Error::class, cascade: ['remove'])]
+    #[ORM\OneToOne(targetEntity: Error::class, cascade: ['remove'])]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     private ?Error $previous = null;
 

@@ -4,6 +4,7 @@ namespace Padam87\ErrorLogBundle\Handler;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\JsonSerializableDateTimeImmutable;
 use Monolog\Logger;
 use Monolog\LogRecord;
 use Padam87\ErrorLogBundle\Entity\Emeddables\Exception;
@@ -56,6 +57,7 @@ class LogHandler extends AbstractProcessingHandler
         try {
             $this->_write($record);
         } catch (\Exception $e) {
+            dump($e); die();
             // getting and Exception here would cause a inf. loop
         }
     }
@@ -110,8 +112,14 @@ class LogHandler extends AbstractProcessingHandler
 
         if (null !== $request) {
             $r = Request::fromRequest($request);
-        } elseif (php_sapi_name() === 'cli') {
+        } elseif (PHP_SAPI === 'cli') {
             $r = Request::fromInput(new ArgvInput());
+        }
+
+        $loggedAt = $record['datetime'];
+
+        if ($loggedAt instanceof JsonSerializableDateTimeImmutable) {
+            $loggedAt = \DateTime::createFromTimestamp($loggedAt->getTimestamp());
         }
 
         $unique = $this->createUniqueHash($r, $e);
@@ -144,7 +152,7 @@ class LogHandler extends AbstractProcessingHandler
             ->setError($error)
             ->setRequest($r)
             ->setException($e)
-            ->setLoggedAt($record['datetime'])
+            ->setLoggedAt($loggedAt)
             ->setUser($user)
         ;
 

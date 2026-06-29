@@ -27,6 +27,8 @@ class LogHandler extends AbstractProcessingHandler
 
     private ?UserInterface $user = null;
 
+    private array $errors = [];
+
     public function setDoctrine(Registry $registry): void
     {
         $this->registry = $registry;
@@ -56,8 +58,7 @@ class LogHandler extends AbstractProcessingHandler
     {
         try {
             $this->_write($record);
-        } catch (\Exception $e) {
-            dump($e); die();
+        } catch (\Exception) {
             // getting and Exception here would cause a inf. loop
         }
     }
@@ -134,7 +135,9 @@ class LogHandler extends AbstractProcessingHandler
 
         $user = $this->getUser();
 
-        if (null === $error = $repo->findOneBy(['uniqueHash' => $unique])) {
+        if (array_key_exists($unique, $this->errors)) {
+            $error = $this->errors[$unique];
+        } elseif (null === $error = $repo->findOneBy(['uniqueHash' => $unique])) {
             $error = new Error();
             $error
                 ->setUniqueHash($unique)
@@ -145,6 +148,8 @@ class LogHandler extends AbstractProcessingHandler
             ;
 
             $em->persist($error);
+
+            $this->errors[$unique] = $error;
         }
 
         $occurrence = new Occurrence();
